@@ -35,7 +35,7 @@ class NamedColor {
 
 List<NamedColor> colors_names() {
   final colors = Colors.primaries.map((c) => c).toList();
-  colors.addAll([Colors.white, Colors.black, Colors.grey, ]);
+  //colors.addAll([Colors.white, Colors.black, Colors.grey, ]);
 
   return colors.fold([], (cumul, current) {
     cumul.add(new NamedColor(current, materialColorsNames[cumul.length]));

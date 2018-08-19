@@ -28,10 +28,7 @@ class ThemeService {
       initTheme();
     });
   }
-
-  Future loadTheme(File file) async {
-    final jsonTheme = await file.readAsString();
-    final themeMap = JSON.decode(jsonTheme);
+  void loadThemefromJSON(dynamic themeMap) {
     theme = new ThemeData.light().copyWith(
         primaryColor: getMaterialColor(themeMap['primaryColor'].toString()),
         accentColor: getMaterialColor(themeMap['accentColor'].toString()),
@@ -71,6 +68,12 @@ class ThemeService {
     //print('ThemeService.load  jsonTheme ${jsonTheme}');
   }
 
+  Future loadTheme(File file) async {
+    final jsonTheme = await file.readAsString();
+    final themeMap = json.decode(jsonTheme);
+    loadThemefromJSON(themeMap);
+  }
+
   Future initTheme() async {
     print('ThemeService.initTheme ${_appDir.path}');
     _file = new File(_appDir.path + '/theme.json');
@@ -86,8 +89,7 @@ class ThemeService {
     else {
     }*/
   }
-
-  void saveTheme(ThemeData themeData) {
+  Map<String, dynamic> getThemeAsMap(ThemeData themeData) {
     final map = <String, dynamic>{
       "platform": themeData.platform == TargetPlatform.iOS ? 'iOS' : 'android',
       "isDark": themeData.brightness == Brightness.light ? 0 : 1,
@@ -114,10 +116,13 @@ class ThemeService {
       "textSelectionHandleColor":
           getMaterialName(themeData.textSelectionHandleColor)
     };
-
+    return map;
+  }
+  void saveTheme(ThemeData themeData) {
+    final map = getThemeAsMap(themeData);
     theme = themeData;
     themeNotifier.value = theme;
-    updateThemeFile(JSON.encode(map));
+    updateThemeFile(json.encode(map));
   }
 
   Future updateThemeFile(String content) async {

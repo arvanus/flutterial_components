@@ -30,7 +30,7 @@ class ThemeService {
   }
   void loadThemefromJSON(dynamic themeMap) {
     theme = new ThemeData.light().copyWith(
-        primaryColor: getMaterialColor(themeMap['primaryColor'].toString()),
+        primaryColor: getMaterialColor(themeMap['primaryColor'].toString()).withAlpha(255),
         accentColor: getMaterialColor(themeMap['accentColor'].toString()),
         scaffoldBackgroundColor:
             getMaterialColor(themeMap['scaffoldBackgroundColor'].toString()),
@@ -130,13 +130,30 @@ class ThemeService {
   }
 }
 
-getMaterialColor(String name, {VoidCallback or}) => colors_names()
+Color getMaterialColor(String name, {VoidCallback or}) {
+  if (name.toLowerCase().startsWith('0x')){
+    try {
+      var c= Color(int.parse(name));
+      print("$name: ${c.toString()}");  
+      return c;
+      //return c.withAlpha(255);
+    } catch (e) {
+      print(e.toString());
+    }
+    
+  }
+  return colors_names()
     .firstWhere((c) => c.name == name, orElse: () => colors_names().first)
     .color;
+}
 
-getMaterialName(Color color, {VoidCallback or}) => colors_names()
+getMaterialName(Color color, {VoidCallback or}) {
+  return '0x${color.value.toRadixString(16).padLeft(8, '0')}';
+  
+  return colors_names()
     .firstWhere((c) => c.color.value == color.value,
         orElse: () => colors_names().first)
     .name;
+}
 
 ThemeData parseTheme(Map<String, dynamic> themeMap) {}

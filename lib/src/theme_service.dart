@@ -77,7 +77,7 @@ class ThemeService {
   Future initTheme() async {
     print('ThemeService.initTheme ${_appDir.path}');
     _file = new File(_appDir.path + '/theme.json');
-    if (!(await _file.exists())) {
+    if (await _file.exists()) {
       print('ThemeService init theme.json... ');
       await _file
           .writeAsString(await rootBundle.loadString("assets/theme.json"));
